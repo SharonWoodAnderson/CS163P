@@ -18,6 +18,6 @@
 + (NSArray *)validColors;
 + (NSArray *)validSymbols;
 + (NSArray *)validShading;
-- (NSUInteger)maxNumberInSet;
++ (NSUInteger)maxNumberInSet;
 
 @end

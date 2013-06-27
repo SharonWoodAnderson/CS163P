@@ -17,7 +17,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreButton;
 @property (weak, nonatomic) IBOutlet UILabel *lastFlipLabel;
 @property (strong, nonatomic) CardMatchingGame *game;
+@property (strong, nonatomic) NSString *scores;
 
 -(void)updateUI;
+-(IBAction)flipCard:(UIButton *)sender;
+-(IBAction)resetGame:(UIButton *)sender;
 
 @end

@@ -35,7 +35,15 @@
     return _facedUpCards;
 }
 
-- (id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck
+-(NSMutableDictionary *)gameScores
+{
+    if (!_gameScores) {
+        _gameScores = [[NSMutableDictionary alloc] init];
+    }
+    return _gameScores;
+}
+
+- (id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck matchingCards:(NSUInteger)gameTypeCards
 {
     self = [super init];
     
@@ -49,6 +57,7 @@
             }
         }
     }
+    _numberOfMatchingCards = gameTypeCards;
     return self;
 }
 
@@ -63,49 +72,50 @@
 
 -(void) flipCardAtIndex:(NSUInteger)index
 {
-    self.cardMatchingLevel = 2;
     Card *card = [self cardAtIndex:index];
-    if (!card.isUnplayable) {
+    
+    if (card && !card.isUnplayable) {
         if (!card.isFaceUp) {
-            self.flipDescription = [NSString stringWithFormat:@"Flipped up %@ !", card.contents];
             NSMutableArray *otherCards = [[NSMutableArray alloc] init];
-            //Checks if first two cards match when in three card match mode.
+            NSMutableArray *otherContents = [[NSMutableArray alloc] init];
             for (Card *otherCard in self.cards) {
                 if (otherCard.isFaceUp && !otherCard.isUnplayable) {
-                    if ([card match:@[otherCard]]) {
-                        [otherCards addObject:otherCard];
-                    } else {
-                        otherCard.faceUp = NO;
-                        self.flipDescription = [NSString stringWithFormat:@"%@ and %@ don't match! %d point penalty!", card.contents, otherCard.contents, MISMATCH_PENALTY];
-                    }
+                    [otherCards addObject:otherCard];
+                    [otherContents addObject:otherCard.contents];
                 }
             }
-            if ([otherCards count] == (self.cardMatchingLevel - 1) ) {
+            if ([otherCards count] < _numberOfMatchingCards - 1) {
+                self.flipDescription = [NSString stringWithFormat:@"Flipped up %@", card.contents];
+            } else {
                 int matchScore = [card match:otherCards];
                 if (matchScore) {
                     card.unplayable = YES;
-                    self.flipDescription = [NSString stringWithFormat:@"%@ ", card.contents];
                     for (Card *otherCard in otherCards) {
                         otherCard.unplayable = YES;
-                        self.flipDescription = [self.flipDescription stringByAppendingFormat:@"%@ ", otherCard.contents];
-                        if (![otherCards lastObject]) {
-                            self.flipDescription = [self.flipDescription stringByAppendingFormat:@"& "];
-                        }
+                        
                     }
                     self.score += matchScore * MATCH_BONUS;
-                    self.flipDescription = [self.flipDescription stringByAppendingFormat:@"match! Match Bonus!"];
+                    self.flipDescription =
+                    [NSString stringWithFormat:@"Matched %@ & %@ for %d points",
+                     card.contents,
+                     [otherContents componentsJoinedByString:@" & "],
+                     matchScore * MATCH_BONUS];
                 } else {
                     for (Card *otherCard in otherCards) {
                         otherCard.faceUp = NO;
                     }
                     self.score -= MISMATCH_PENALTY;
+                    self.flipDescription =
+                    [NSString stringWithFormat:@"%@ & %@ don’t match! %d point penalty!",
+                     card.contents,
+                     [otherContents componentsJoinedByString:@" & "],
+                     MISMATCH_PENALTY];
                 }
             }
             self.score -= FLIP_COST;
         }
-        card.faceUp = !card.isFaceUp;
+        card.faceUp = !card.faceUp;
     }
 }
-
 
 @end

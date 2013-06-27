@@ -11,16 +11,18 @@
 
 @interface CardMatchingGame : NSObject
 
-- (id)initWithCardCount:(NSUInteger)cardCount usingDeck:(Deck *)deck;
+- (id)initWithCardCount:(NSUInteger)cardCount usingDeck:(Deck *)deck matchingCards:(NSUInteger)gameTypeCards;
 
 - (void)flipCardAtIndex:(NSUInteger)index;
 
 - (Card *)cardAtIndex:(NSUInteger)index;
 
+@property (strong, nonatomic) NSMutableDictionary *gameScores;
+
 @property (nonatomic, readonly)int score;
 
 @property (nonatomic, readonly) NSString *flipDescription;
 
-@property (nonatomic) int cardMatchingLevel;
+@property (nonatomic) int numberOfMatchingCards;
 
 @end

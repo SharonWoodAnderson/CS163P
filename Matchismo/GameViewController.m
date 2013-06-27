@@ -9,25 +9,13 @@
 #import "GameViewController.h"
 
 @interface GameViewController ()
+@property (weak, nonatomic) IBOutlet UITextView *scoresField;
 
 @end
 
 @implementation GameViewController
 
-- (void)setCardButtons:(NSArray *)cardButtons
-{
-    _cardButtons = cardButtons;
-    UIImage *cardBackImage = [UIImage imageNamed:@"card-back.png"];
-    UIImage *blank = [[UIImage alloc] init];
-    
-    for (UIButton *cardButton in cardButtons)
-    {
-        [cardButton setImage:cardBackImage forState:UIControlStateNormal];
-        [cardButton setImage:blank forState:UIControlStateSelected];
-        [cardButton setImage:blank forState:UIControlStateSelected|UIControlStateDisabled];
-    }
-    [self updateUI];
-}
+@synthesize scores = _scores;
 
 - (void)updateUI
 {
@@ -61,6 +49,8 @@
 
 
 - (IBAction)resetGame:(UIButton *)sender {
+    [self.game.gameScores setObject:[NSNumber numberWithInt:self.game.score] forKey:@"Spel: "];
+    self.scores = [NSString stringWithFormat:@"%@", self.game.gameScores];
     self.game = nil;
     self.flipCount = 0;
     [self updateUI];

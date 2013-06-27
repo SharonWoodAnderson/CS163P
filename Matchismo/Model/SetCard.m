@@ -8,9 +8,48 @@
 
 #import "SetCard.h"
 
+#define NUMBER_OF_MATCHING_CARDS 3
+
 @implementation SetCard
 
 @synthesize color = _color, symbol = _symbol, shading = _shading;
+
+-(int)match:(NSArray *)otherCards
+{
+    int score = 0;
+    
+    if ([otherCards count] == NUMBER_OF_MATCHING_CARDS - 1) {
+        NSMutableArray *colors = [[NSMutableArray alloc] init];
+        NSMutableArray *symbols = [[NSMutableArray alloc] init];
+        NSMutableArray *shadings = [[NSMutableArray alloc] init];
+        NSMutableArray *numbers = [[NSMutableArray alloc] init];
+        [colors addObject:self.color];
+        [symbols addObject:self.symbol];
+        [shadings addObject:self.shading];
+        [numbers addObject:@(self.number)];
+        for (id otherCard in otherCards) {
+            if ([otherCard isKindOfClass:[SetCard class]]) {
+                SetCard *otherSetCard = (SetCard *)otherCard;
+                if (![colors containsObject:otherSetCard.color])
+                    [colors addObject:otherSetCard.color];
+                if (![symbols containsObject:otherSetCard.symbol])
+                    [symbols addObject:otherSetCard.symbol];
+                if (![shadings containsObject:otherSetCard.shading])
+                    [shadings addObject:otherSetCard.shading];
+                if (![numbers containsObject:@(otherSetCard.number)])
+                    [numbers addObject:@(otherSetCard.number)];
+                if (([colors count] == 1 || [colors count] == NUMBER_OF_MATCHING_CARDS)
+                    && ([symbols count] == 1 || [symbols count] == NUMBER_OF_MATCHING_CARDS)
+                    && ([shadings count] == 1 || [shadings count] == NUMBER_OF_MATCHING_CARDS)
+                    && ([numbers count] == 1 || [numbers count] == NUMBER_OF_MATCHING_CARDS)) {
+                    score = 4;
+                }
+            }
+        }
+    }
+    
+    return score;
+}
 
 - (NSString *)contents
 {
