@@ -17,8 +17,6 @@
 
 - (Card *)cardAtIndex:(NSUInteger)index;
 
-@property (strong, nonatomic) NSMutableDictionary *gameScores;
-
 @property (nonatomic, readonly)int score;
 
 @property (nonatomic, readonly) NSString *flipDescription;

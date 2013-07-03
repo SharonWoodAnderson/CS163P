@@ -16,7 +16,7 @@
 
 @implementation CardGameViewController
 
-@synthesize game = _game;
+@synthesize game = _game, gameResult = _gameResult;
 
 -(CardMatchingGame *)game
 {
@@ -24,6 +24,13 @@
         _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count usingDeck:[[PlayingCardDeck alloc] init] matchingCards:2];
     }
     return _game;
+}
+
+- (GameResults *)gameResult
+{
+    if (!_gameResult) _gameResult = [[GameResults alloc] init];
+    _gameResult.gameType = @"Card Matching";
+    return _gameResult;
 }
 
 - (void)updateUI

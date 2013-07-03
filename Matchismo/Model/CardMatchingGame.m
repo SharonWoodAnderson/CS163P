@@ -35,14 +35,6 @@
     return _facedUpCards;
 }
 
--(NSMutableDictionary *)gameScores
-{
-    if (!_gameScores) {
-        _gameScores = [[NSMutableDictionary alloc] init];
-    }
-    return _gameScores;
-}
-
 - (id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck matchingCards:(NSUInteger)gameTypeCards
 {
     self = [super init];

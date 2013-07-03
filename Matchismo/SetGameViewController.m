@@ -17,7 +17,7 @@
 
 @implementation SetGameViewController
 
-@synthesize game = _game;
+@synthesize game = _game, gameResult = _gameResult;
 
 - (CardMatchingGame *)game
 {
@@ -27,13 +27,20 @@
     return _game;
 }
 
+- (GameResults *)gameResult
+{
+    if (!_gameResult) _gameResult = [[GameResults alloc] init];
+    _gameResult.gameType = @"Set";
+    return _gameResult;
+}
+
 -(void)updateUI
 {
     {
         for(UIButton *cardButton in self.cardButtons){
             Card *card=[self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
             if(card.isFaceUp)
-                cardButton.backgroundColor=[UIColor grayColor];
+                cardButton.backgroundColor = [UIColor redColor];
             else
                 cardButton.backgroundColor=nil;
             
@@ -41,11 +48,11 @@
             cardButton.selected = card.isFaceUp;
             cardButton.enabled =!card.isUnplayable;
             cardButton.alpha =card.isUnplayable? 0.3:1.0;
+            if (card.isUnplayable) cardButton.backgroundColor = [UIColor greenColor];
             [cardButton setImageEdgeInsets:UIEdgeInsetsMake(1,-1,-1,-1)];
         }
-        [super updateUI];
-        
     }
+    [super updateUI];
 }
 
 - (NSMutableAttributedString *)getCardAttributedContents:(Card *)card
@@ -105,8 +112,8 @@
     
     
     
-    NSLog(@"Set card to: %@",matstring);
-    NSLog(@"Card contents: %@", card.contents);
+    //NSLog(@"Set card to: %@",matstring);
+    //NSLog(@"Card contents: %@", card.contents);
     
     return mat;
 }

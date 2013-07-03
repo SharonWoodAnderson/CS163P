@@ -10,6 +10,4 @@
 
 @interface GameResultsViewController : GameViewController
 
-@property (weak, nonatomic) IBOutlet UITextView *scoresField;
-
 @end

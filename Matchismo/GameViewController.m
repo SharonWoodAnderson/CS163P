@@ -7,15 +7,21 @@
 //
 
 #import "GameViewController.h"
+#import "GameResults.h"
 
 @interface GameViewController ()
-@property (weak, nonatomic) IBOutlet UITextView *scoresField;
 
 @end
 
 @implementation GameViewController
 
 @synthesize scores = _scores;
+
+- (GameResults *)gameResult
+{
+    if (!_gameResult) _gameResult = [[GameResults alloc] init];
+    return _gameResult;
+}
 
 - (void)updateUI
 {
@@ -37,7 +43,7 @@
 {
     _flipCount = flipCount;
     self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d", self.flipCount];
-    NSLog(@"flips updated to %d", self.flipCount);
+    //NSLog(@"flips updated to %d", self.flipCount);
 }
 
 - (IBAction)flipCard:(UIButton *)sender {
@@ -45,13 +51,13 @@
     [self.game flipCardAtIndex:[self.cardButtons indexOfObject:sender]];
     [self updateUI];
     self.flipCount++;
+    self.gameResult.score = self.game.score;
 }
 
 
 - (IBAction)resetGame:(UIButton *)sender {
-    [self.game.gameScores setObject:[NSNumber numberWithInt:self.game.score] forKey:@"Spel: "];
-    self.scores = [NSString stringWithFormat:@"%@", self.game.gameScores];
     self.game = nil;
+    self.gameResult = nil;
     self.flipCount = 0;
     [self updateUI];
 }
